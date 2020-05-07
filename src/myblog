@@ -1,0 +1,64 @@
+upstream php-wp {
+    server                    unix:/var/run/myblog.sock;
+}
+
+server {
+    listen                    80;
+    listen                    [::]:80;
+    server_name               91.172.60.73;
+	return                    301 https://$host$request_uri;
+}
+
+server {
+    listen                    443 ssl;
+    listen                    [::]:443 ssl;
+	server_name               myblog.mondomaine.com;
+
+    root                      /var/www/myblog;
+	
+	index			          index.php;
+	
+	ssl_certificate           /etc/letsencrypt/live/myblog.mondomaine.com/fullchain.pem;
+    ssl_certificate_key       /etc/letsencrypt/live/myblog.mondomaine.com/privkey.pem;
+	ssl_trusted_certificate   /etc/letsencrypt/live/myblog.mondomaine.com/chain.pem;
+
+	ssl_dhparam               /etc/ssl/certs/dhparam.pem;
+
+    ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+    ssl_ciphers               'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK !SRP !CAMELLIA !SEED';
+	ssl_ecdh_curve            secp384r1;
+	
+	ssl_session_cache         shared:SSL:1m;
+    ssl_session_timeout       1440m;
+	ssl_stapling              on;
+	ssl_stapling_verify       on;
+	resolver                  8.8.8.8 8.8.4.4;
+
+    add_header                Strict-Transport-Security max-age=31536000;
+	
+	location / {
+		try_files             $uri $uri/ /index.php?$args;
+	}
+
+	location = /favicon.ico {
+		log_not_found         off;
+		access_log            off;
+	}
+
+	location = /robots.txt {
+		allow                 all;
+		log_not_found         off;
+		access_log            off;
+	}
+
+	location ~ .php$ {
+		include               fastcgi.conf;
+		fastcgi_pass          php-wp;
+	}
+
+	location ~* .(js|css|png|jpg|jpeg|gif|ico)$ {
+		expires               max;
+		log_not_found         off;
+	}
+}

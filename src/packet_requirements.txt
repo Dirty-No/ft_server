@@ -1,0 +1,9 @@
+wget
+php php-common
+php-cli php-mysql php-curl php-gd php-intl
+php-fpm
+mariadb-server mariadb-client
+nginx
+software-properties-common
+certbot
+
