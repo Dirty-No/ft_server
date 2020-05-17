@@ -36,6 +36,11 @@ RUN 	service mysql start && mysql wordpress -u root --password=  < config/wordpr
 CMD 	service nginx restart \
 		&& service php7.3-fpm start \
 		&& service mysql start \
-		&& echo "\e[31mPhpMyAdmin:\n\t|_\tLogin : root\n\t|_\tPassword is empty\n\nWordPress:\n\t|_\tLogin : smaccary\n\t|_\tPassword : 1234\e[0m" && bash
+		&& echo "\e[31mPhpMyAdmin:\n\t|_\t\
+Login : root\n\t|_\t\
+Password is empty\n\n\
+WordPress:\n\t|_\t\
+Login : smaccary\n\t|_\t\
+Password : 1234\e[0m" && bash
 
 
