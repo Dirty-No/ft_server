@@ -2,7 +2,6 @@ FROM	debian:buster
 EXPOSE	80
 EXPOSE	443
 WORKDIR	/app
-COPY	./src/ /app
 RUN		apt-get update -yqq && apt-get upgrade -yqq
 
 RUN 	apt-get install -yqq nginx 
@@ -11,6 +10,8 @@ RUN		apt-get install -yqq php-fpm php-mysql
 RUN		apt-get install -yqq php-mbstring php-zip php-gd php-xml php-pear php-gettext php-cgi -y
 
 RUN		apt-get install -yqq vim
+
+COPY	./src/ /app
 
 RUN 	mv ssl /etc/nginx/.
 
